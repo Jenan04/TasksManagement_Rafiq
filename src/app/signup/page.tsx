@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import SignUpForm from "../auth/signupForm";
+import SignUpForm from "@/app/components/auth/signupForm";
 
 export default function SignUpPage() {
   return (

@@ -2,7 +2,7 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signupSchema, type SignupInput } from '@/lib/validations/auth';
-import InputField from '../components/ui/inputFeild';
+import InputField from '../ui/inputFeild';
 import { CheckCircle2, Circle } from 'lucide-react'; 
 import Link from 'next/link';
 
