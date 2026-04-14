@@ -4,21 +4,45 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { loginSchema, type LoginInput } from '@/lib/validations/auth';
 import InputField from '../ui/inputFeild';
 import Link from 'next/link';
-
-
+import { supabase } from '@/lib/supabase';
+import { useRouter } from 'next/navigation';
+import toast from 'react-hot-toast';
+import { storeTokensInCookie } from '@/app/actions/cookie';
 export default function loginForm() {
-    const {
-        register,
-        handleSubmit,
-        formState: { errors, isSubmitting },
-      } = useForm<LoginInput>({
-        resolver: zodResolver(loginSchema),
-        mode: 'onChange', 
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<LoginInput>({
+    resolver: zodResolver(loginSchema),
+    mode: 'onChange', 
+  });
+
+  const router = useRouter();   
+  const onSubmit = async (values: LoginInput) => { 
+    try {
+      const { data: authData, error } = await supabase.auth.signInWithPassword({
+        email: values.email,
+        password: values.password,
       });
 
-    const onSubmit = (data: LoginInput) => {
-      console.log('Login Data:', data);
-     };   
+      if (error) throw error;
+
+      if (authData.session) {
+        await storeTokensInCookie(
+          authData.session.access_token, 
+          authData.session.refresh_token
+        );
+
+        toast.success('Welcome back, Jean!'); 
+        
+        router.push('/dashboard');
+        router.refresh(); 
+      }
+    } catch (error: any) {
+      toast.error(error.message || 'Invalid email or password');
+    }
+  };
 
   return (
     <div className="w-full max-w-[576px] bg-white rounded-[8px] p-[48px] shadow-sm border border-gray-100">
