@@ -2,19 +2,20 @@
 import React from 'react';
 import { InputProps } from '@/types/types';
 
-export default function inputFeild({ label, error,required, ...props }:InputProps) {
+export default function inputFeild({ label, error,required, showOptional, ...props }:InputProps) {
   return (
     <div className="flex flex-col gap-1.5 w-full">
       {label && (
-        <label className="text-sm font-semibold text-[--color-foreground] opacity-90">
-          {label}
-          {required && <span className="text-red-500 ml-1">*</span>}
+         <label className="text-[12px] font-bold text-slate-700 flex justify-start items-center">        
+           <span>{label}</span>
+          {!required && showOptional && (
+            <span className="text-[11px] text-slate-400 font-normal italic">(Optional)</span>
+          )}
         </label>
       )}
 
       <input
         {...props}     
-        required={required}
         className={`
          w-full px-4 py-2.5 rounded-[6px] border outline-none transition-all duration-200
          bg-white text-slate-900 placeholder:text-slate-400

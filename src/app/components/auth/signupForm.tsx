@@ -35,7 +35,6 @@ export default function SignUpForm() {
       <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4">
         <InputField 
           label="NAME" 
-          required={true}
           {...register('name')} 
           error={errors.name?.message} 
           placeholder="Enter your full name"
@@ -43,7 +42,6 @@ export default function SignUpForm() {
 
         <InputField 
           label="EMAIL" 
-          required={true}
           {...register('email')} 
           error={errors.email?.message} 
           placeholder="yourname@company.com"
@@ -51,14 +49,13 @@ export default function SignUpForm() {
 
         <InputField 
           label="JOB TITLE" 
-          required={false}
+          showOptional={true}
           {...register('jobTitle')} 
           placeholder="e.g. Project Manager"
         />
         <div className="grid grid-cols-2 gap-4">
           <InputField 
             label="PASSWORD" 
-            required={true}
             type="password"
             {...register('password')}
             error={errors.password?.message} 
@@ -66,7 +63,6 @@ export default function SignUpForm() {
           />
           <InputField 
             label="CONFIRM" 
-            required={true}
             type="password"
             {...register('confirmPassword')} 
             error={errors.confirmPassword?.message} 
