@@ -5,6 +5,9 @@ import { signupSchema, type SignupInput } from '@/lib/validations/auth';
 import InputField from '../ui/inputFeild';
 import { CheckCircle2, Circle } from 'lucide-react'; 
 import Link from 'next/link';
+import { supabase } from '@/lib/supabase'; 
+import { useRouter } from 'next/navigation';
+import toast from 'react-hot-toast';
 
 export default function SignUpForm() {
   const {
@@ -16,15 +19,38 @@ export default function SignUpForm() {
     resolver: zodResolver(signupSchema),
     mode: 'onChange', 
   });
-
   const pass = watch('password', '');
   const hasChars = pass.length >= 8
   const hasMixed = /[A-Z]/.test(pass) && /[a-z]/.test(pass) && /[0-9]/.test(pass)
   const hasSpecial = /[^A-Za-z0-9]/.test(pass)
 
+  const router = useRouter();
   const onSubmit = async (data: SignupInput) => {
-    console.log('Form Data:', data);
-  };
+  try {
+    const { data: signUpData, error } = await supabase.auth.signUp({
+      email: data.email,
+      password: data.password,
+      options: {
+        data: {
+          display_name: data.name,
+          job_title: data.jobTitle,
+        },
+      },
+    });
+
+    if (error) throw error; 
+    toast.success('Account created successfully!');
+
+    router.push('/dashboard');
+
+  } catch (error: unknown) { 
+    if (error instanceof Error) {
+      toast.error(error.message);
+    } else {
+      toast.error('Something went wrong');
+    }
+  }  
+};
 
   return (
     <div className="w-full max-w-[576px] bg-white rounded-[8px] p-[48px] shadow-sm border border-gray-100">
