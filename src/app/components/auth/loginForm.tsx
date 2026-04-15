@@ -4,21 +4,42 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { loginSchema, type LoginInput } from '@/lib/validations/auth';
 import InputField from '../ui/inputFeild';
 import Link from 'next/link';
-
+import { supabase } from '@/lib/supabase';
+import { useRouter } from 'next/navigation';
+import toast from 'react-hot-toast';
+// import { storeTokensInCookie } from '@/app/actions/cookie';
+import { sessionLogic } from '@/app/actions/sessionLogic';
 
 export default function loginForm() {
-    const {
-        register,
-        handleSubmit,
-        formState: { errors, isSubmitting },
-      } = useForm<LoginInput>({
-        resolver: zodResolver(loginSchema),
-        mode: 'onChange', 
-      });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<LoginInput>({
+    resolver: zodResolver(loginSchema),
+    mode: 'onChange', 
+  });
 
-    const onSubmit = (data: LoginInput) => {
-      console.log('Login Data:', data);
-     };   
+  const router = useRouter();   
+  const onSubmit = async (values: LoginInput) => { 
+    try {
+      const result = await sessionLogic(values); 
+
+      if (result?.error) {
+        toast.error(result.error);
+        return;
+      }
+
+      if (result?.success) {
+        toast.success(`Welcome back, ${result.name}!`); 
+        router.push('/dashboard');
+        router.refresh(); 
+      }
+    } catch (error) {
+      toast.error('Something went wrong');
+    }
+    
+  };
 
   return (
     <div className="w-full max-w-[576px] bg-white rounded-[8px] p-[48px] shadow-sm border border-gray-100">
