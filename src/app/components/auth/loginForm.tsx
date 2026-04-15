@@ -7,7 +7,9 @@ import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
-import { storeTokensInCookie } from '@/app/actions/cookie';
+// import { storeTokensInCookie } from '@/app/actions/cookie';
+import { sessionLogic } from '@/app/actions/sessionLogic';
+
 export default function loginForm() {
   const {
     register,
@@ -21,27 +23,22 @@ export default function loginForm() {
   const router = useRouter();   
   const onSubmit = async (values: LoginInput) => { 
     try {
-      const { data: authData, error } = await supabase.auth.signInWithPassword({
-        email: values.email,
-        password: values.password,
-      });
+      const result = await sessionLogic(values); 
 
-      if (error) throw error;
+      if (result?.error) {
+        toast.error(result.error);
+        return;
+      }
 
-      if (authData.session) {
-        await storeTokensInCookie(
-          authData.session.access_token, 
-          authData.session.refresh_token
-        );
-
-        toast.success('Welcome back, Jean!'); 
-        
+      if (result?.success) {
+        toast.success(`Welcome back, ${result.name}!`); 
         router.push('/dashboard');
         router.refresh(); 
       }
-    } catch (error: any) {
-      toast.error(error.message || 'Invalid email or password');
+    } catch (error) {
+      toast.error('Something went wrong');
     }
+    
   };
 
   return (
