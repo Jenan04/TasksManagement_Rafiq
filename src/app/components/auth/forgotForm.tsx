@@ -8,25 +8,32 @@ import { forgotPassSchema, type ForgotPassInput } from '@/lib/validations/auth';
 import Link from 'next/link';
 import { ArrowLeft, CheckCircle2, Timer } from 'lucide-react';
 
-export default function ForgotForm({ onSubmit, isLoading, isEmailSent }: ForgotProps & { isEmailSent?: boolean }) {
+export default function ForgotForm({ onSubmit, isLoading, isEmailSent, trials }: ForgotProps & { isEmailSent?: boolean }) {
   const [timeLeft, setTimeLeft] = useState(300); 
 
   const { register, handleSubmit, formState: { errors, isValid } } = useForm<ForgotPassInput>({
     resolver: zodResolver(forgotPassSchema),
-    mode: "onChange"
+    mode: "onChange", 
+    defaultValues: {
+      email:""
+    }
   });
 
   useEffect(() => {
-    let timer: NodeJS.Timeout;
+  if (!isEmailSent) return;
 
-    if (isEmailSent && timeLeft > 0) {
-      timer = setInterval(() => {
-        setTimeLeft((prev) => prev - 1);
-      }, 1000);
-    }
+  const timer = setInterval(() => {
+    setTimeLeft((prev) => {
+      if (prev <= 1) {
+        clearInterval(timer);
+        return 0;
+      }
+      return prev - 1;
+    });
+  }, 1000);
 
-    return () => clearInterval(timer);
-  }, [isEmailSent, timeLeft]);
+  return () => clearInterval(timer);
+}, [isEmailSent, trials]);
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
