@@ -4,7 +4,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { loginSchema, type LoginInput } from '@/lib/validations/auth';
 import InputField from '../ui/inputFeild';
 import Link from 'next/link';
-import { supabase } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 // import { storeTokensInCookie } from '@/app/actions/cookie';

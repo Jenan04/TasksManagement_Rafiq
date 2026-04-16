@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-
+import { createServer } from '@/lib/supabase'
 export function middleware(req: NextRequest){
     const token = req.cookies.get('sb-token')?.value
 

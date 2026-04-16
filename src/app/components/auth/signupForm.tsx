@@ -5,7 +5,7 @@ import { signupSchema, type SignupInput } from '@/lib/validations/auth';
 import InputField from '../ui/inputFeild';
 import { CheckCircle2, Circle } from 'lucide-react'; 
 import Link from 'next/link';
-import { supabase } from '@/lib/supabase'; 
+import { createClient } from '@/lib/supabase'; 
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 
@@ -25,6 +25,8 @@ export default function SignUpForm() {
   const hasSpecial = /[^A-Za-z0-9]/.test(pass)
 
   const router = useRouter();
+  const supabase = createClient();
+  
   const onSubmit = async (data: SignupInput) => {
   try {
     const { data: signUpData, error } = await supabase.auth.signUp({

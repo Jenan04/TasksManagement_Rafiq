@@ -32,6 +32,15 @@ export const forgotPassSchema = z.object({
 }) 
 
 
+export const resetPassSchema  = z.object({
+  newPassword: passSchema,
+  confirmPassword: z.string(),
+})
+  .refine((data) => data.newPassword === data.confirmPassword, {
+    message: "unmatch password",
+    path:["confirmPassword"]
+  })
 export type SignupInput = z.infer<typeof signupSchema>;
 export type LoginInput = z.infer<typeof loginSchema>;
 export type ForgotPassInput = z.infer<typeof forgotPassSchema>;
+export type ResetPassInput = z.infer<typeof resetPassSchema>;
