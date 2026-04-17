@@ -11,7 +11,8 @@ export async function storeTokensInCookie(currentToken: string, refreshToken: st
 
     const cookieConfig = {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
+        // secure: process.env.NODE_ENV === 'production',
+        secure: false,
         sameSite: 'lax' as const, // "Tell TS this is a specific literal type, not just any string, to match Cookie options" that's a new information for me
         path: '/'
     }
