@@ -22,9 +22,9 @@ export async function sessionLogic(values: LoginInput) {
         //   data.session.refresh_token,
         //   !!values.rememberMe
         // );
-        const expiresAt = data.session.expires_at; 
-        const expiresDate = new Date(expiresAt * 1000);
-        console.log("السيشن رح تنتهي في تاريخ:", expiresDate.toLocaleString());
+        // const expiresAt = data.session.expires_at; 
+        // const expiresDate = new Date(expiresAt * 1000);
+        // console.log("السيشن رح تنتهي في تاريخ:", expiresDate.toLocaleString());
         const name = data.user?.user_metadata?.full_name || "User";
         return { success: true, name}
       }
