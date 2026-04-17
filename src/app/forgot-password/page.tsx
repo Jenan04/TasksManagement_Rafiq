@@ -1,4 +1,5 @@
 'use client';
+import { Logo } from "@/app/components/ui/logo";
 import { useState } from 'react';
 import ForgotForm from "@/app/components/auth/forgotForm";
 import toast from 'react-hot-toast';
@@ -47,8 +48,7 @@ export default function ForgotPassword() {
 
   return (
     <main className="min-h-screen flex items-center justify-center bg-[#f4f7fa] p-4">
-      <div className="absolute top-10 left-10 flex items-center gap-2">
-      </div>
+      <Logo />
 
       <ForgotForm 
         onSubmit={handleForgotPassword} 
