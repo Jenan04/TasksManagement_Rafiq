@@ -12,3 +12,7 @@ export interface ForgotProps {
     isLoading: boolean;
     trials: number;
 }
+
+export interface StyleProps {
+    className?: string;
+}

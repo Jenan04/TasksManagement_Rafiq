@@ -1,17 +1,15 @@
 'use client';
-import { Logo } from "@/app/components/ui/logo";
+import { Logo } from "@/components/ui/logo";
 import { useState } from 'react';
-import ForgotForm from "@/app/components/auth/forgotForm";
+import ForgotForm from "@/components/auth/forgotForm";
 import toast from 'react-hot-toast';
-import { createClient } from '@/lib/supabase'
-
+// import { createClient } from '@/lib/supabase'
+import { forgotPasswordAction } from '@/actions/forgotAction'
 
 export default function ForgotPassword() {
   const [isLoading, setIsLoading] = useState(false);
   const [isEmailSent, setIsEmailSent] = useState(false);
   const [trials, setTrials] = useState(0);
-
-  const supabase = createClient();
 
   const handleForgotPassword = async (data: { email: string }) => {
     if (trials >= 3){
@@ -21,22 +19,16 @@ export default function ForgotPassword() {
 
     setIsLoading(true);
     try {
-      // console.log("Sending reset link to:", data.email);
-      const { error } = await supabase.auth.resetPasswordForEmail(data.email, {
-        redirectTo: `${window.location.origin}/auth/reset-password`,
-      });
+    const result = await forgotPasswordAction(data.email);
 
-      if (error) {
-        toast.error(error.message);
-        return;
-      }
-
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      toast.success('Reset link sent to your email!');
-
+    if (result.success) {
+      toast.success(result.message); 
       setIsEmailSent(true);
       setTrials(prev => prev + 1);
+    } else {
+      toast.error(result.error);
+    }
+  
 
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : 'Something went wrong';
@@ -48,7 +40,7 @@ export default function ForgotPassword() {
 
   return (
     <main className="min-h-screen flex items-center justify-center bg-[#f4f7fa] p-4">
-      <Logo />
+      <Logo className="absolute top-10 left-10 md:top-14 md:left-14"/>
 
       <ForgotForm 
         onSubmit={handleForgotPassword} 

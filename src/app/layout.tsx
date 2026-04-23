@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Toaster } from 'react-hot-toast';
+import AuthListener from '@/components/auth/AuthListener';
 
 const inter = Inter({ 
   subsets: ["latin"],
@@ -30,6 +31,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.className} antialiased`}>
         <Toaster position="top-center" reverseOrder={false} />
+        <AuthListener />
         {children}
       </body>
     </html>
